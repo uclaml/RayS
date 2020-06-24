@@ -1,17 +1,18 @@
 import argparse
+import json
 import numpy as np
 import torch
 import torchvision.models as models
 
 from dataset import load_mnist_test_data, load_cifar10_test_data, load_imagenet_test_data
 from general_torch_model import GeneralTorchModel
-from mnist_model import MNIST
-from cifar_model import CIFAR10
-from fs_utils import Attack_None, Attack_Interp
 
-from RayS import RayS
+from arch import mnist_model
+from arch import cifar_model
 
-import json
+from RayS_Single import RayS
+
+
 
 
 def main():
@@ -36,18 +37,18 @@ def main():
 
     targeted = True if args.targeted == '1' else False
     early_stopping = False if args.early == '0' else True
-    ord = 2 if args.norm == 'l2' else np.inf
+    order = 2 if args.norm == 'l2' else np.inf
 
     print(args)
 
     if args.dataset == 'mnist':
-        model = MNIST().cuda()
+        model = mnist_model.MNIST().cuda()
         model = torch.nn.DataParallel(model, device_ids=[0])
         model.load_state_dict(torch.load('model/mnist_gpu.pt'))
         test_loader = load_mnist_test_data(args.batch)
         torch_model = GeneralTorchModel(model, n_class=10, im_mean=None, im_std=None)
     elif args.dataset == 'cifar':
-        model = CIFAR10().cuda()
+        model = cifar_model.CIFAR10().cuda()
         model = torch.nn.DataParallel(model, device_ids=[0])
         model.load_state_dict(torch.load('model/cifar10_gpu.pt'))
         test_loader = load_cifar10_test_data(args.batch)
@@ -69,7 +70,7 @@ def main():
         exit(1)
 
      
-    attack = RayS(torch_model, ord=ord, epsilon=args.epsilon, early_stopping=early_stopping)
+    attack = RayS(torch_model, ord=order, epsilon=args.epsilon, early_stopping=early_stopping)
      
     stop_dists = []
     stop_queries = []
@@ -109,12 +110,11 @@ def main():
 
         count += 1
 
-        print("index: {0} avg dist {1} avg queries {2} asr {3} robust acc {4}\n"
+        print("index: {:4d} avg dist: {:.4f} avg queries: {:.4f} asr: {:.4f} \n"
               .format(i,
                       np.mean(np.array(stop_dists)),
                       np.mean(np.array(stop_queries)),
-                      np.mean(np.array(asr)),
-                      count * (1 - np.mean(np.array(asr))) / (i + 1)
+                      np.mean(np.array(asr))
                       ))
 
 
