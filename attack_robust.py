@@ -6,7 +6,7 @@ import torch
 
 from dataset import load_mnist_test_data, load_cifar10_test_data, load_imagenet_test_data
 from general_torch_model import GeneralTorchModel
-from general_tf_model import GeneralTFModel
+from general_tf_model import GeneralTFModel, TFHubModel
 
 from arch import fs_utils
 from arch import wideresnet
@@ -114,6 +114,12 @@ def main():
         test_loader = load_cifar10_test_data(args.batch)
         torch_model = GeneralTorchModel(
             model, n_class=10, im_mean=None, im_std=None)
+    elif args.dataset == 'rob_cifar_uat':
+        import tensorflow_hub as hub
+        UAT_HUB_URL = ('https://tfhub.dev/deepmind/unsupervised-adversarial-training/cifar10/wrn_106/1')
+        model = hub.Module(UAT_HUB_URL)
+        test_loader = load_cifar10_test_data(args.batch)
+        torch_model = TFHubModel(model, n_class=10, im_mean=None, im_std=None)
     else:
         print("Invalid dataset")
         exit(1)

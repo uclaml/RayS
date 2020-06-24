@@ -1,5 +1,9 @@
 # RayS
-This repository contains our pytorch implementation of RayS: A Ray Searching Method for Hard-label Adversarial Attack in the paper [RayS: A Ray Searching Method for Hard-label Adversarial Attack]() (accepted by KDD 2020). 
+"RayS: A Ray Searching Method for Hard-label Adversarial Attack"\
+*Jinghui Chen*, *Quanquan Gu*\
+[https://arxiv.org/abs/2006.12792](https://arxiv.org/abs/2006.12792)
+
+This repository contains our pytorch implementation of RayS: A Ray Searching Method for Hard-label Adversarial Attack in the paper [RayS: A Ray Searching Method for Hard-label Adversarial Attack](https://arxiv.org/abs/2006.12792) (accepted by KDD 2020). 
 
 ## Prerequisites: 
 * PyTorch
