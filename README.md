@@ -22,12 +22,12 @@ We have tested widely used CIFAR-10 benchmark with the maximum L_inf norm pertub
 
 |#    |paper       |natural          |robust  (report) |robust  (RayS) |ADBD|
 |:---:|:---:|---:|---:|---:|---:|
-|**1**| [RST (Carmon et al., 2019)](https://arxiv.org/abs/1905.13736)*|  89.7| 62.5| 64.6| 0.046|
-|**2**| [TRADES (Zhang et al., 2019b)](https://arxiv.org/abs/1901.08573)| 85.4| 56.4| 57.3| 0.040| 
-|**3**| [Adversarial Training (Madry et al., 2018)](https://arxiv.org/abs/1706.06083)| 87.1| 47.0| -| 0.038| 
-|**4**| [Feature Scattering (Zhang & Wang, 2019)](http://papers.nips.cc/paper/8459-defense-against-adversarial-attacks-using-feature-scattering-based-adversarial-training)|  91.3| 60.6| 44.5| 0.030|
-|**5**| [Adversarial Interpolation Training (Zhang & Xu, 2020)](https://openreview.net/forum?id=Syejj0NYvr&noteId=Syejj0NYvr) | 91.0| 68.7| 46.9| 0.031|
-|**6**| [Sensible Adversarial Training (Kim & Wang, 2020)](https://openreview.net/forum?id=rJlf_RVKwr)| 91.9| 57.2| 43.9| 0.029| 
+|**1**| [RST <br>(Carmon et al., 2019)](https://arxiv.org/abs/1905.13736)*|  89.7| 62.5| 64.6| 0.046|
+|**2**| [TRADES <br>(Zhang et al., 2019b)](https://arxiv.org/abs/1901.08573)| 85.4| 56.4| 57.3| 0.040| 
+|**3**| [Adversarial Training <br>(Madry et al., 2018)](https://arxiv.org/abs/1706.06083)| 87.1| 47.0| -| 0.038| 
+|**4**| [Feature Scattering<br> (Zhang & Wang, 2019)](http://papers.nips.cc/paper/8459-defense-against-adversarial-attacks-using-feature-scattering-based-adversarial-training)|  91.3| 60.6| 44.5| 0.030|
+|**5**| [Adversarial Interpolation Training<br> (Zhang & Xu, 2020)](https://openreview.net/forum?id=Syejj0NYvr&noteId=Syejj0NYvr) | 91.0| 68.7| 46.9| 0.031|
+|**6**| [Sensible Adversarial Training <br>(Kim & Wang, 2020)](https://openreview.net/forum?id=rJlf_RVKwr)| 91.9| 57.2| 43.9| 0.029| 
  
 Please contact us if you want to add your model into the leaderboard.
 
