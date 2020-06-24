@@ -21,7 +21,7 @@ We have tested widely used CIFAR-10 benchmark with the maximum L_inf norm pertub
 **Note**: Ranking is the based the ADBD metric. * denotes models using extra data for training.
 
 |#    |paper       |natural          |robust  (report) |robust  (RayS) |ADBD|
-|:---:|---|:---:|---:|---:|---:|---:|
+|:---:|:---:|---:|---:|---:|---:|
 |**1**| [RST (Carmon et al., 2019)](https://arxiv.org/abs/1905.13736)*|  89.7| 62.5| 64.6| 0.046|
 |**2**| [TRADES (Zhang et al., 2019b)](https://arxiv.org/abs/1901.08573)| 85.4| 56.4| 57.3| 0.040| 
 |**3**| [Adversarial Training (Madry et al., 2018)](https://arxiv.org/abs/1706.06083)| 87.1| 47.0| -| 0.038| 
@@ -76,8 +76,7 @@ To evaluate TensorFlow models with RayS attack:
 
 ```python
 from general_tf_model import GeneralTFModel 
-tf_model = GeneralTFModel(
-            model.logits, model.x_input, sess, n_class=10, im_mean=None, im_std=None)
+tf_model = GeneralTFModel(model.logits, model.x_input, sess, n_class=10, im_mean=None, im_std=None)
 
 from RayS import RayS
 attack = RayS(tf_model, epsilon=args.epsilon)
