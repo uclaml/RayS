@@ -2,12 +2,16 @@ import torch
 import numpy as np
 import torch.nn as nn
 
+import tensorflow as tf
+# import tensorflow.compat.v1 as tf
+import tensorflow_hub as hub
 
-class GeneralTorchModel(nn.Module):
-    def __init__(self, model, n_class=10, im_mean=None, im_std=None):
-        super(GeneralTorchModel, self).__init__()
-        self.model = model
-        self.model.eval()
+class GeneralTFModel(nn.Module):
+    def __init__(self, model_logits, x_input, sess, n_class=10, im_mean=None, im_std=None):
+        super(GeneralTFModel, self).__init__()
+        self.model_logits = model_logits
+        self.x_input = x_input
+        self.sess = sess
         self.num_queries = 0
         self.im_mean = im_mean
         self.im_std = im_std
@@ -16,9 +20,9 @@ class GeneralTorchModel(nn.Module):
     def forward(self, image):
         if len(image.size()) != 4:
             image = image.unsqueeze(0)
-        image = self.preprocess(image)
-        logits = self.model(image)
-        return logits
+        image_tf = np.moveaxis(image.cpu().numpy(), 1, 3)
+        logits = self.sess.run(self.model_logits, {self.x_input: image_tf})
+        return torch.from_numpy(logits).cuda()
 
     def preprocess(self, image):
         if isinstance(image, np.ndarray):
@@ -35,13 +39,15 @@ class GeneralTorchModel(nn.Module):
         return processed
 
     def predict_prob(self, image):
-        with torch.no_grad():
-            if len(image.size()) != 4:
-                image = image.unsqueeze(0)
-            image = self.preprocess(image)
-            logits = self.model(image)
-            self.num_queries += image.size(0)
-        return logits
+        if len(image.size()) != 4:
+            image = image.unsqueeze(0)
+        image = self.preprocess(image)
+        self.num_queries += image.size(0)
+
+        image_tf = np.moveaxis(image.cpu().numpy(), 1, 3)
+        logits = self.sess.run(self.model_logits, {self.x_input: image_tf})
+        
+        return torch.from_numpy(logits).cuda()
 
     def predict_label(self, image):
         logits = self.predict_prob(image)

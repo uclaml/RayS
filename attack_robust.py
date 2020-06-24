@@ -3,19 +3,24 @@ import json
 import numpy as np
 import torch
 
+
 from dataset import load_mnist_test_data, load_cifar10_test_data, load_imagenet_test_data
 from general_torch_model import GeneralTorchModel
+from general_tf_model import GeneralTFModel
 
 from arch import fs_utils
 from arch import wideresnet
 from arch import wideresnet1
 from arch import wideresnet2
 from arch import wideresnet_rst
+from arch import madry_wrn
 
-from RayS import RayS 
+from RayS import RayS
 
 import torch.backends.cudnn as cudnn
 cudnn.benchmark = True
+
+np.random.seed(1234)
 
 
 def main():
@@ -49,22 +54,25 @@ def main():
         test_loader = load_cifar10_test_data(args.batch)
         torch_model = GeneralTorchModel(
             model, n_class=10, im_mean=None, im_std=None)
-    elif args.dataset == 'rob_cifar_adv':
-        model = wideresnet.WideResNet().cuda()
-        model = torch.nn.DataParallel(model)
-        model.load_state_dict(torch.load('model/rob_cifar_madry.pt'))
+    # elif args.dataset == 'rob_cifar_adv':
+    #     model = wideresnet.WideResNet().cuda()
+    #     model = torch.nn.DataParallel(model)
+    #     model.load_state_dict(torch.load('model/rob_cifar_madry.pt'))
+    #     test_loader = load_cifar10_test_data(args.batch)
+    #     torch_model = GeneralTorchModel(
+    #         model, n_class=10, im_mean=None, im_std=None)
+    elif args.dataset == 'rob_cifar_madry':
+        import tensorflow as tf
+        model = madry_wrn.Model(mode='eval')
+        saver = tf.train.Saver()
+        sess = tf.Session()
+        saver.restore(sess, tf.train.latest_checkpoint('model/madry'))
         test_loader = load_cifar10_test_data(args.batch)
-        torch_model = GeneralTorchModel(
-            model, n_class=10, im_mean=None, im_std=None)
-    elif args.dataset == 'rob_cifar_mart':
-        model = wideresnet_rst.WideResNet_RST().cuda()
-        model = torch.nn.DataParallel(model)
-        model.load_state_dict(torch.load('model/mart_unlabel.pt')['state_dict'])
-        test_loader = load_cifar10_test_data(args.batch)
-        torch_model = GeneralTorchModel(
-            model, n_class=10, im_mean=None, im_std=None)
+        torch_model = GeneralTFModel(
+            model.pre_softmax, model.x_input, sess, n_class=10, im_mean=None, im_std=None)
     elif args.dataset == 'rob_cifar_interp':
-        model = wideresnet1.WideResNet1(depth=28, num_classes=10, widen_factor=10).cuda()
+        model = wideresnet1.WideResNet1(
+            depth=28, num_classes=10, widen_factor=10).cuda()
         model = torch.nn.DataParallel(model)
         checkpoint = torch.load('model/rob_cifar_interp')
         model.load_state_dict(checkpoint['net'])
@@ -98,6 +106,14 @@ def main():
         test_loader = load_cifar10_test_data(args.batch)
         torch_model = GeneralTorchModel(
             model, n_class=10, im_mean=None, im_std=None)
+    elif args.dataset == 'rob_cifar_mart':
+        model = wideresnet_rst.WideResNet_RST().cuda()
+        model = torch.nn.DataParallel(model)
+        model.load_state_dict(torch.load(
+            'model/mart_unlabel.pt')['state_dict'])
+        test_loader = load_cifar10_test_data(args.batch)
+        torch_model = GeneralTorchModel(
+            model, n_class=10, im_mean=None, im_std=None)
     else:
         print("Invalid dataset")
         exit(1)
@@ -107,8 +123,6 @@ def main():
     adbd = []
     queries = []
     succ = []
-
-    np.random.seed(1234)
 
     count = 0
     for i, (data, label) in enumerate(test_loader):
@@ -126,7 +140,7 @@ def main():
                     torch_model.n_class) * torch.ones(len(data), dtype=torch.long).cuda()
         else:
             target = None
-            
+
         _, queries_b, adbd_b, succ_b = attack(
             data, label, target=target, query_limit=args.query)
 
