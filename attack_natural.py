@@ -23,9 +23,9 @@ def main():
                         help='targeted or untargeted')
     parser.add_argument('--norm', default='linf', type=str,
                         help='Norm for attack, linf only')
-    parser.add_argument('--num', default=50, type=int,
+    parser.add_argument('--num', default=10000, type=int,
                         help='Number of samples to be attacked from test dataset.')
-    parser.add_argument('--query_limit', default=10000, type=int,
+    parser.add_argument('--query', default=10000, type=int,
                         help='Maximum queries for the attack')
     parser.add_argument('--batch', default=1, type=int,
                         help='attack batch size.')
@@ -96,7 +96,7 @@ def main():
             target = np.random.randint(torch_model.n_class) * torch.ones(len(xi), dtype=torch.long).cuda()
 
         adv, queries, dist, succ = attack(xi, yi, target=target, seed=seeds[i],
-                                          query_limit=args.query_limit)
+                                          query_limit=args.query)
         # print(queries, dist, succ)
         if succ:
             stop_queries.append(queries)
@@ -118,7 +118,7 @@ def main():
                       ))
 
 
-    name = args.dataset + '_' + args.alg + '_' + args.norm + '_query' + str(args.query_limit) + '_eps' + str(
+    name = args.dataset + '_' + args.alg + '_' + args.norm + '_query' + str(args.query) + '_eps' + str(
         args.epsilon) + '_early' + args.early
     summary_txt = 'distortion: ' + str(np.mean(np.array(stop_dists))) + ' queries: ' + str(
         np.mean(np.array(stop_queries))) + ' succ rate: ' + str(np.mean(np.array(asr)))

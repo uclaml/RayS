@@ -4,7 +4,7 @@ from pgbar import progress_bar
 
 
 class RayS(object):
-    def __init__(self, model, order=np.inf, epsilon=0.031):
+    def __init__(self, model, epsilon=0.031, order=np.inf):
         self.model = model
         self.ord = order
         self.epsilon = epsilon

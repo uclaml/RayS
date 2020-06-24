@@ -124,7 +124,7 @@ def main():
         print("Invalid dataset")
         exit(1)
 
-    attack = RayS(torch_model, order=order, epsilon=args.epsilon)
+    attack = RayS(torch_model, epsilon=args.epsilon, order=order)
 
     adbd = []
     queries = []
