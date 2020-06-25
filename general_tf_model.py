@@ -56,9 +56,10 @@ class GeneralTFModel(nn.Module):
 
 
 class TFHubModel(nn.Module):
-    def __init__(self, model, n_class=10, im_mean=None, im_std=None):
+    def __init__(self, model, sess, n_class=10, im_mean=None, im_std=None):
         super(TFHubModel, self).__init__()
         self.model = model
+        self.sess = sess
         self.num_queries = 0
         self.im_mean = im_mean
         self.im_std = im_std
@@ -69,9 +70,8 @@ class TFHubModel(nn.Module):
             image = image.unsqueeze(0)
         image_tf = dict(x=np.moveaxis(image.cpu().numpy(), 1, 3), decay_rate=0.1, prefix='default')
         logits = self.model(image_tf)
-        session = tf.Session() 
-        session.run([tf.global_variables_initializer(), tf.tables_initializer()])
-        logits = session.run(logits)
+        logits = self.sess.run(logits)
+        # print (logits)
         return torch.from_numpy(logits).cuda()
 
     def preprocess(self, image):
@@ -96,9 +96,7 @@ class TFHubModel(nn.Module):
 
         image_tf = dict(x=np.moveaxis(image.cpu().numpy(), 1, 3), decay_rate=0.1, prefix='default')
         logits = self.model(image_tf)
-        session = tf.Session() 
-        session.run([tf.global_variables_initializer(), tf.tables_initializer()])
-        logits = session.run(logits)
+        logits = self.sess.run(logits)
         
         return torch.from_numpy(logits).cuda()
 
