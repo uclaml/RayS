@@ -117,12 +117,15 @@ def main():
     elif args.dataset == 'rob_cifar_uat':
         import tensorflow_hub as hub
         import tensorflow as tf
-        UAT_HUB_URL = ('https://tfhub.dev/deepmind/unsupervised-adversarial-training/cifar10/wrn_106/1')
+        UAT_HUB_URL = ('./model/uat_model')
         model = hub.Module(UAT_HUB_URL)
+        my_input = tf.placeholder(tf.float32, shape=[None, 32, 32, 3])
+        my_logits = model(dict(x=my_input, decay_rate=0.1, prefix='default'))
         sess = tf.Session()
         sess.run([tf.global_variables_initializer(), tf.tables_initializer()])
         test_loader = load_cifar10_test_data(args.batch)
-        torch_model = TFHubModel(model, sess, n_class=10, im_mean=[125.3/255, 123.0/255, 113.9/255], im_std=[63.0/255, 62.1/255, 66.7/255])
+        torch_model = GeneralTFModel(
+            my_logits, my_input, sess, n_class=10, im_mean=[125.3/255, 123.0/255, 113.9/255], im_std=[63.0/255, 62.1/255, 66.7/255])
     else:
         print("Invalid dataset")
         exit(1)
