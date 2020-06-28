@@ -6,7 +6,7 @@ import torch
 
 from dataset import load_mnist_test_data, load_cifar10_test_data, load_imagenet_test_data
 from general_torch_model import GeneralTorchModel
-from general_tf_model import GeneralTFModel, TFHubModel
+from general_tf_model import GeneralTFModel
 
 from arch import fs_utils
 from arch import wideresnet
