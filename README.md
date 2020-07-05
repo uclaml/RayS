@@ -20,7 +20,7 @@ We have tested widely used CIFAR-10 benchmark with the maximum L_inf norm pertub
 
 **Note**: Ranking is the based the ADBD metric. * denotes models using extra data for training.
 
-|#    |paper       |natural          |robust  (report) |robust  (RayS) |ADBD|
+|#    |paper       |natural Acc         |robust Acc (report) |robust Acc (RayS) |ADBD|
 |:---:|:---:|---:|---:|---:|---:|
 |**1**| [RST <br>(Carmon et al., 2019)](https://arxiv.org/abs/1905.13736)*|  89.7| 62.5| 64.6| 0.0465|
 |**2**| [MART <br>(Wang et al., 2020)](https://openreview.net/forum?id=rklOg6EFwS)*| 87.5| 65.0| 62.2| 0.0439|
