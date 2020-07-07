@@ -20,6 +20,8 @@ RayS also proposed a new model robustness metric: `ADBD` (average decision bound
 We tested the robustness of recently proposed robust models which are trained on the CIFAR-10 dataset with the maximum L_inf norm perturbation strength  `epsilon=0.031` (8/255)
 
 **Note**: Ranking is based on the ADBD (average decision boundary distance) metric. * denotes model using extra data for training. 
+   
+
 
 |Method |Natural Acc |Robust Acc (Reported) |Robust Acc (RayS) | ADBD|
 |:---:|---:|---:|---:|---:|
