@@ -70,9 +70,9 @@ class NetworkBlock(nn.Module):
         return self.layer(x)
 
 
-class WideResNet2(nn.Module):
+class WideResNet(nn.Module):
     def __init__(self, depth, num_classes, widen_factor=1, dropRate=0.0):
-        super(WideResNet2, self).__init__()
+        super(WideResNet, self).__init__()
         nChannels = [
             16, 16 * widen_factor, 32 * widen_factor, 64 * widen_factor
         ]
@@ -85,16 +85,16 @@ class WideResNet2(nn.Module):
                                stride=1,
                                padding=1,
                                bias=False)
-        # 1st block
+        # block 1
         self.block1 = NetworkBlock(n, nChannels[0], nChannels[1], block, 1,
                                    dropRate)
-        # 2nd block
+        # block 2
         self.block2 = NetworkBlock(n, nChannels[1], nChannels[2], block, 2,
                                    dropRate)
-        # 3rd block
+        # block 3
         self.block3 = NetworkBlock(n, nChannels[2], nChannels[3], block, 2,
                                    dropRate)
-        # global average pooling and classifier
+
         self.bn1 = nn.BatchNorm2d(nChannels[3])
         self.relu = nn.ReLU(inplace=True)
         self.fc = nn.Linear(nChannels[3], num_classes)
@@ -110,13 +110,18 @@ class WideResNet2(nn.Module):
             elif isinstance(m, nn.Linear):
                 m.bias.data.zero_()
 
-    def forward(self, x):
-        out1 = self.conv1(x)
-        out2 = self.block1(out1)
-        out3 = self.block2(out2)
-        out4 = self.block3(out3)
-        out5 = self.relu(self.bn1(out4))
-        out6 = F.avg_pool2d(out5, 8)
-        out = out6.view(-1, self.nChannels)
+    def forward(self, x, mode='logits'):
+        out = self.conv1(x)
+        out = self.block1(out)
+        out = self.block2(out)
+        out = self.block3(out)
+        out = self.relu(self.bn1(out))
+        out = F.avg_pool2d(out, 8)
+        out = out.view(-1, self.nChannels)
 
-        return self.fc(out), self.fc(out)
+        if mode.lower() == 'logits':
+            return self.fc(out)
+        elif mode.lower() == 'feature':
+            return out.view(x.size(0), -1)
+        else:
+            raise Exception('unsupported mode is specified')

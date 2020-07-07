@@ -10,10 +10,14 @@ from general_tf_model import GeneralTFModel
 
 from arch import fs_utils
 from arch import wideresnet
-from arch import wideresnet1
-from arch import wideresnet2
+from arch import wideresnet_fs
+from arch import wideresnet_interp
+from arch import wideresnet_he
 from arch import wideresnet_rst
+from arch import wideresnet_overfitting
 from arch import madry_wrn
+from arch import preact_resnet
+from arch import wideresnet_compact
 
 from RayS import RayS
 
@@ -54,13 +58,13 @@ def main():
         test_loader = load_cifar10_test_data(args.batch)
         torch_model = GeneralTorchModel(
             model, n_class=10, im_mean=None, im_std=None)
-    # elif args.dataset == 'rob_cifar_adv':
-    #     model = wideresnet.WideResNet().cuda()
-    #     model = torch.nn.DataParallel(model)
-    #     model.load_state_dict(torch.load('model/rob_cifar_madry.pt'))
-    #     test_loader = load_cifar10_test_data(args.batch)
-    #     torch_model = GeneralTorchModel(
-    #         model, n_class=10, im_mean=None, im_std=None)
+    elif args.dataset == 'rob_cifar_adv':
+        model = wideresnet.WideResNet().cuda()
+        model = torch.nn.DataParallel(model)
+        model.load_state_dict(torch.load('model/rob_cifar_madry.pt'))
+        test_loader = load_cifar10_test_data(args.batch)
+        torch_model = GeneralTorchModel(
+            model, n_class=10, im_mean=None, im_std=None)
     elif args.dataset == 'rob_cifar_madry':
         import tensorflow as tf
         model = madry_wrn.Model(mode='eval')
@@ -71,7 +75,7 @@ def main():
         torch_model = GeneralTFModel(
             model.pre_softmax, model.x_input, sess, n_class=10, im_mean=None, im_std=None)
     elif args.dataset == 'rob_cifar_interp':
-        model = wideresnet1.WideResNet1(
+        model = wideresnet_interp.WideResNet(
             depth=28, num_classes=10, widen_factor=10).cuda()
         model = torch.nn.DataParallel(model)
         checkpoint = torch.load('model/rob_cifar_interp')
@@ -80,7 +84,7 @@ def main():
         torch_model = GeneralTorchModel(model, n_class=10, im_mean=[0.5, 0.5, 0.5],
                                         im_std=[0.5, 0.5, 0.5])
     elif args.dataset == 'rob_cifar_fs':
-        basic_net = wideresnet2.WideResNet2(
+        basic_net = wideresnet_fs.WideResNet(
             depth=28, num_classes=10, widen_factor=10).cuda()
         basic_net = basic_net.cuda()
         model = fs_utils.Model_FS(basic_net)
@@ -126,6 +130,49 @@ def main():
         test_loader = load_cifar10_test_data(args.batch)
         torch_model = GeneralTFModel(
             my_logits, my_input, sess, n_class=10, im_mean=[125.3/255, 123.0/255, 113.9/255], im_std=[63.0/255, 62.1/255, 66.7/255])
+    elif args.dataset == 'rob_cifar_overfitting':
+        model = wideresnet_overfitting.WideResNet(depth=34, num_classes=10, widen_factor=20).cuda()
+        model = torch.nn.DataParallel(model)
+        model.load_state_dict(torch.load('model/rob_cifar_overfitting.pth'))
+        test_loader = load_cifar10_test_data(args.batch)
+        torch_model = GeneralTorchModel(
+            model, n_class=10, im_mean=[0.4914, 0.4822, 0.4465], im_std=[0.2471, 0.2435, 0.2616])
+    elif args.dataset == 'rob_cifar_pretrain':
+        model = wideresnet_overfitting.WideResNet(depth=28, num_classes=10, widen_factor=10).cuda()
+        model = torch.nn.DataParallel(model)
+        model.load_state_dict(torch.load('model/rob_cifar_pretrain.pt'))
+        test_loader = load_cifar10_test_data(args.batch)
+        torch_model = GeneralTorchModel(
+            model, n_class=10, im_mean=[0.5, 0.5, 0.5], im_std=[0.5, 0.5, 0.5])
+    elif args.dataset == 'rob_cifar_fast':
+        model = preact_resnet.PreActResNet18().cuda()
+        model.load_state_dict(torch.load('model/rob_cifar_fast_epoch30.pth'))
+        test_loader = load_cifar10_test_data(args.batch)
+        torch_model = GeneralTorchModel(
+            model, n_class=10, im_mean=[0.4914, 0.4822, 0.4465], im_std=[0.2471, 0.2435, 0.2616])
+    elif args.dataset == 'rob_cifar_compact':
+        model = torch.nn.DataParallel(wideresnet_compact.wrn_28_10())
+        ckpt = torch.load('model/rob_cifar_compact.pth.tar', map_location="cpu")["state_dict"]
+        model.load_state_dict(ckpt)
+        model.cuda()
+        test_loader = load_cifar10_test_data(args.batch)
+        torch_model = GeneralTorchModel(
+            model, n_class=10, im_mean=None, im_std=None)
+    if args.dataset == 'rob_cifar_mma':
+        from advertorch_examples.models import get_cifar10_wrn28_widen_factor
+        model = get_cifar10_wrn28_widen_factor(4).cuda()
+        model = torch.nn.DataParallel(model)
+        model.module.load_state_dict(torch.load('model/rob_cifar_mma.pt')['model'])
+        test_loader = load_cifar10_test_data(args.batch)
+        torch_model = GeneralTorchModel(
+            model, n_class=10, im_mean=None, im_std=None)
+    if args.dataset == 'rob_cifar_he':
+        model = wideresnet_he.WideResNet(normalize = True).cuda()
+        model = torch.nn.DataParallel(model)
+        model.module.load_state_dict(torch.load('model/rob_cifar_pgdHE.pt'))
+        test_loader = load_cifar10_test_data(args.batch)
+        torch_model = GeneralTorchModel(
+            model, n_class=10, im_mean=None, im_std=None)
     else:
         print("Invalid dataset")
         exit(1)

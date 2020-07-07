@@ -1,38 +1,46 @@
-# RayS: A Ray Searching Method for Hard-label Adversarial Attack
+# RayS: A Ray Searching Method for Hard-label Adversarial Attack (KDD2020)
 "RayS: A Ray Searching Method for Hard-label Adversarial Attack"\
 *Jinghui Chen*, *Quanquan Gu*\
 [https://arxiv.org/abs/2006.12792](https://arxiv.org/abs/2006.12792)
 
-This repository contains our pytorch implementation of RayS: A Ray Searching Method for Hard-label Adversarial Attack in the paper [RayS: A Ray Searching Method for Hard-label Adversarial Attack](https://arxiv.org/abs/2006.12792) (accepted by KDD 2020). 
+This repository contains our PyTorch implementation of RayS: A Ray Searching Method for Hard-label Adversarial Attack in the paper [RayS: A Ray Searching Method for Hard-label Adversarial Attack](https://arxiv.org/abs/2006.12792) (accepted by KDD 2020). 
 
 # What is RayS
-RayS is a hard-label adversarial attack which only requires model's hard label output (prediction label). 
+RayS is a hard-label adversarial attack which only requires the target model's hard-label output (prediction label). 
 
-**It is gradient-free, hyper-parameter free and is also independent to adversarial losses such as CrossEntropy or C&W.**
+**It is gradient-free, hyper-parameter free, and is also independent of adversarial losses such as CrossEntropy or C&W.**
 
 Therefore, RayS can be used as a good sanity check for possible "falsely robust" models (models that may overfit to certain types of gradient-based attacks and adversarial losses).
 
-**RayS also proposed a new model robustness metric: ADBD (average decision boundary distance), which reflects examples' average distance to their closest decision boundary, which is independent to the perturbation strength `epsilon`.**
+# Average Decision Boundary Distance (ADBD)
+RayS also proposed a new model robustness metric: `ADBD` (average decision boundary distance), which reflects examples' average distance to their closest decision boundary, which is independent to the perturbation strength `epsilon`.
 
-# Model Robustness Evaluation
+# Model Robustness: ADBD Leaderboard
 
-We have tested widely used CIFAR-10 benchmark with the maximum L_inf norm pertubation strength  `epsilon=0.031` (8/255)
+We tested the robustness of recently proposed robust models which are trained on the CIFAR-10 dataset with the maximum L_inf norm perturbation strength  `epsilon=0.031` (8/255)
 
-**Note**: Ranking is the based the ADBD metric. * denotes models using extra data for training.
+**Note**: Ranking is based on the ADBD (average decision boundary distance) metric. * denotes model using extra data for training. 
 
-|#    |paper       |natural          |robust  (report) |robust  (RayS) |ADBD|
-|:---:|:---:|---:|---:|---:|---:|
-|**1**| [RST <br>(Carmon et al., 2019)](https://arxiv.org/abs/1905.13736)*|  89.7| 62.5| 64.6| 0.0465|
-|**2**| [MART <br>(Wang et al., 2020)](https://openreview.net/forum?id=rklOg6EFwS)*| 87.5| 65.0| 62.2| 0.0439|
-|**3**| [TRADES <br>(Zhang et al., 2019b)](https://arxiv.org/abs/1901.08573)| 85.4| 56.4| 57.3| 0.0403| 
-|**4**| [Adversarial Training <br>(Madry et al., 2018)](https://arxiv.org/abs/1706.06083)| 87.1| 47.0| -| 0.0377| 
-|**5**| [Adversarial Interpolation Training<br> (Zhang & Xu, 2020)](https://openreview.net/forum?id=Syejj0NYvr&noteId=Syejj0NYvr) | 91.0| 68.7| 46.9| 0.0305|
-|**6**| [Feature Scattering<br> (Zhang & Wang, 2019)](http://papers.nips.cc/paper/8459-defense-against-adversarial-attacks-using-feature-scattering-based-adversarial-training)|  91.3| 60.6| 44.5| 0.0301|
-|**7**| [Sensible Adversarial Training <br>(Kim & Wang, 2020)](https://openreview.net/forum?id=rJlf_RVKwr)| 91.9| 57.2| 43.9| 0.0288| 
+|Method |Natural Acc |Robust Acc (Reported) |Robust Acc (RayS) | ADBD|
+|:---:|---:|---:|---:|---:|
+| [RST <br>(Carmon et al., 2019)](https://arxiv.org/abs/1905.13736)*|  89.7| 62.5| 64.6| 0.0465|
+| [HYDRA <br>(Sehwag et al., 2020)](https://arxiv.org/abs/2002.10509)*| 89.0| 57.2| 62.1| 0.0450|
+| [MART <br>(Wang et al., 2020)](https://openreview.net/forum?id=rklOg6EFwS)*| 87.5| 65.0| 62.2| 0.0439|
+| [UAT++ <br>(Alayrac et al., 2019)](https://arxiv.org/abs/1905.13725)*| 86.5| 56.3| 62.1| 0.0426|
+| [Pretraining <br>(Hendrycks et al., 2019)](https://arxiv.org/abs/1901.09960)*| 87.1| 57.4| 60.1| 0.0419|
+| [Robust-overfitting <br>(Rice et al., 2020)](https://arxiv.org/abs/2002.11569)| 85.3 | 58.0 | 58.6 | 0.0404|
+| [TRADES <br>(Zhang et al., 2019b)](https://arxiv.org/abs/1901.08573)| 85.4| 56.4| 57.3| 0.0403| 
+| [Adversarial Training (retrained) <br>(Madry et al., 2018)](https://arxiv.org/abs/1706.06083)| 87.4| 50.6| 54.0| 0.0377| 
+| [MMA <br>(Ding et al., 2020)](https://openreview.net/forum?id=HkeryxBtPB)| 84.4| 47.2| 47.7| 0.0345|
+| [Adversarial Training (original) <br>(Madry et al., 2018)](https://arxiv.org/abs/1706.06083)| 87.1| 47.0| 50.7| 0.0344| 
+| [Fast Adversarial Training <br>(Wong et al., 2020)](https://arxiv.org/abs/2001.03994)| 83.8| 46.1| 50.1 | 0.0334|
+| [Adv-Interp <br> (Zhang & Xu, 2020)](https://openreview.net/forum?id=Syejj0NYvr&noteId=Syejj0NYvr) | 91.0| 68.7| 46.9| 0.0305|
+| [Feature-Scatter <br> (Zhang & Wang, 2019)](http://papers.nips.cc/paper/8459-defense-against-adversarial-attacks-using-feature-scattering-based-adversarial-training)|  91.3| 60.6| 44.5| 0.0301|
+| [SENSE <br>(Kim & Wang, 2020)](https://openreview.net/forum?id=rJlf_RVKwr)| 91.9| 57.2| 43.9| 0.0288| 
  
-Please contact us if you want to add your model into the leaderboard.
+Please contact us if you want to add your model to the leaderboard.
 
-## How to use RayS to evaluate your model robostness:
+## How to use RayS to evaluate your model robustness:
 
 ### Prerequisites: 
 * Python
@@ -54,7 +62,7 @@ where:
 + `torch_model` is the PyTorch model under GeneralTorchModel warpper; For models using transformed images (exceed the range of [0,1]), simply set `im_mean=[0.5, 0.5, 0.5]` and `im_std=[0.5, 0.5, 0.5]` for instance,
 + `epsilon` is the maximum adversarial perturbation strength.
 
-To actally run RayS attack, use
+To actually run RayS attack, use
 
 ```python
 x_adv, queries, adbd, succ = attack(data, label, query_limit)
@@ -67,7 +75,7 @@ it returns:
 + `succ`: indicate whether each example being successfully attacked.
 
 
-* Sample usage on attacking robust model:
+* Sample usage on attacking a robust model:
 ```bash
   -  python3 attack_robust.py --dataset rob_cifar_trades --query 10000 --batch 1000  --epsilon 0.031
 ```
@@ -88,23 +96,38 @@ where:
 + `model.x_input`: placeholder for model input (NHWC format),
 + `sess`: TF session .
 
-The rest part is the same us evaluating PyTorch models.
+The remaining part is the same as evaluating PyTorch models.
 
 ## Reproduce experiments in the paper:
-* Run attacks on naturally trained model (Inception):
+* Run attacks on a naturally trained model (Inception):
 ```bash
   -  python3 attack_natural.py --dataset inception --epsilon 0.05
 ```
-* Run attacks on naturally trained model (Resnet):
+* Run attacks on a naturally trained model (Resnet):
 ```bash
   -  python3 attack_natural.py --dataset resnet --epsilon 0.05
 ```
-* Run attacks on naturally trained model (Cifar):
+* Run attacks on a naturally trained model (Cifar):
 ```bash
   - python3 attack_natural.py --dataset cifar --epsilon 0.031
 ```
-* Run attacks on naturally trained model (MNIST):
+* Run attacks on a naturally trained model (MNIST):
 ```bash
   - python3 attack_natural.py --dataset mnist --epsilon 0.3
 ```
 
+
+## Citation
+Please check our paper for technical details and full results. 
+
+```
+@article{chen2020rays,
+  title={RayS: A Ray Searching Method for Hard-label Adversarial Attack},
+  author={Chen, Jinghui and Gu, Quanquan},
+  journal={arXiv preprint arXiv:2006.12792},
+  year={2020}
+}
+```
+
+## Contact
+If you have any question regarding RayS attack or the ADBD leaderboard above, please contact jinghuic@ucla.edu, enjoy!
