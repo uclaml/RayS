@@ -17,10 +17,10 @@ RayS also proposed a new model robustness metric: `ADBD` (average decision bound
 
 # Model Robustness: ADBD Leaderboard
 
-We tested the robustness of recently proposed robust models which are trained on the CIFAR-10 dataset with the maximum L_inf norm perturbation strength  `epsilon=0.031` (8/255)
+We tested the robustness of recently proposed robust models which are trained on the CIFAR-10 dataset with the maximum L_inf norm perturbation strength  `epsilon=0.031` (8/255). The robustness is evaluated on the entire CIFAR-10 testset (10000 examples).
 
 **Note**: 
-* Ranking is based on the ADBD (average decision boundary distance) metric.
+* Ranking is based on the ADBD (average decision boundary distance) metric under RayS attack with the default query limit set as 40000. Reducing the query limit will accelerate the process but may lead to inaccurate ADBD value. For fast checking purpose, we recommend evaluating on subset of CIFAR-10 testset (e.g., 1000 examples).
 * `*` denotes model using extra data for training. 
 * `Robust Acc (RayS)` represents robust accuracy under RayS attack for L_inf norm perturbation strength `epsilon=0.031` (8/255). For truly robust models, this value could be larger than the reported value (using white-box attacks) due to the hard-label limitation. For the current best robust accuracy evaluation, please refers to [AutoAttack](https://github.com/fra31/auto-attack), which uses an ensemble of four white-box/black-box attacks. 
 * `ADBD` represents our proposed Average Decision Boundary Distance metric, which is independent to the perturbation strength `epsilon`. It reflects the overall model robustness through the lens of decision boundary distance. `ADBD` can be served as a complement to the traditional robust accuracy metric. Furthermore, `ADBD` only depends on hard-label output and can be adopted for cases where back-propgation or even soft-labels are not available. 
@@ -89,8 +89,9 @@ it returns:
 
 * Sample usage on attacking a robust model:
 ```bash
-  -  python3 attack_robust.py --dataset rob_cifar_trades --query 10000 --batch 1000  --epsilon 0.031
+  -  python3 attack_robust.py --dataset rob_cifar_trades --query 40000 --batch 1000  --epsilon 0.031
 ```
++ You can also use `--num 1000` argument to limit the number of examples to be attacked as 1000. Default `num` is set as 10000 (the whole CIFAR10 testset).
 
 ### TensorFlow models
 To evaluate TensorFlow models with RayS attack:
@@ -109,6 +110,8 @@ where:
 + `sess`: TF session .
 
 The remaining part is the same as evaluating PyTorch models.
+
+ 
 
 ## Reproduce experiments in the paper:
 * Run attacks on a naturally trained model (Inception):
