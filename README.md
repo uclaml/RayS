@@ -13,14 +13,17 @@ RayS is a hard-label adversarial attack which only requires the target model's h
 Therefore, RayS can be used as a good sanity check for possible "falsely robust" models (models that may overfit to certain types of gradient-based attacks and adversarial losses).
 
 # Average Decision Boundary Distance (ADBD)
-RayS also proposed a new model robustness metric: `ADBD` (average decision boundary distance), which reflects examples' average distance to their closest decision boundary, which is independent to the perturbation strength `epsilon`.
+RayS also proposed a new model robustness metric: `ADBD` (average decision boundary distance), which reflects examples' average distance to their closest decision boundary.    
 
 # Model Robustness: ADBD Leaderboard
 
 We tested the robustness of recently proposed robust models which are trained on the CIFAR-10 dataset with the maximum L_inf norm perturbation strength  `epsilon=0.031` (8/255)
 
-**Note**: Ranking is based on the ADBD (average decision boundary distance) metric. * denotes model using extra data for training. 
-   
+**Note**: 
+* Ranking is based on the ADBD (average decision boundary distance) metric.
+* `*` denotes model using extra data for training. 
+* `Robust Acc (RayS)` represents robust accuracy under RayS attack for L_inf norm perturbation strength `epsilon=0.031` (8/255). For truly robust models, this value could be larger than the reported value (using white-box attacks) due to the hard-label limitation. For the current best robust accuracy evaluation, please refers to [AutoAttack](https://github.com/fra31/auto-attack), which uses an ensemble of four white-box/black-box attacks. 
+* `ADBD` represents our proposed Average Decision Boundary Distance metric, which is independent to the perturbation strength `epsilon`. It reflects the overall model robustness through the lens of decision boundary distance. `ADBD` can be served as a complement to the traditional robust accuracy metric. Furthermore, `ADBD` only depends on hard-label output and can be adopted for cases where back-propgation or even soft-labels are not available. 
 
 
 |Method |Natural Acc |Robust Acc <br>(Reported) |Robust Acc <br>(RayS) | ADBD|
@@ -40,7 +43,14 @@ We tested the robustness of recently proposed robust models which are trained on
 | [Feature-Scatter <br> (Zhang & Wang, 2019)](http://papers.nips.cc/paper/8459-defense-against-adversarial-attacks-using-feature-scattering-based-adversarial-training)|  91.3| 60.6| 44.5| 0.0301|
 | [SENSE <br>(Kim & Wang, 2020)](https://openreview.net/forum?id=rJlf_RVKwr)| 91.9| 57.2| 43.9| 0.0288| 
  
+
+<p align="center">
+    <img src="images/adbd_leaderboard.png" width="450"\>
+</p>
+ 
+
 Please contact us if you want to add your model to the leaderboard.
+
 
 ## How to use RayS to evaluate your model robustness:
 
