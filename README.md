@@ -136,10 +136,10 @@ The remaining part is the same as evaluating PyTorch models.
 Please check our paper for technical details and full results. 
 
 ```
-@article{chen2020rays,
+@inproceedings{chen2020rays,
   title={RayS: A Ray Searching Method for Hard-label Adversarial Attack},
   author={Chen, Jinghui and Gu, Quanquan},
-  journal={arXiv preprint arXiv:2006.12792},
+  booktitle={Proceedings of the 26rd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining},
   year={2020}
 }
 ```
