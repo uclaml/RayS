@@ -35,6 +35,7 @@ We tested the robustness of recently proposed robust models which are trained on
 | [Pretraining <br>(Hendrycks et al., 2019)](https://arxiv.org/abs/1901.09960)*| 87.1| 57.4| 60.1| 0.0419|
 | [Robust-overfitting <br>(Rice et al., 2020)](https://arxiv.org/abs/2002.11569)| 85.3 | 58.0 | 58.6 | 0.0404|
 | [TRADES <br>(Zhang et al., 2019b)](https://arxiv.org/abs/1901.08573)| 85.4| 56.4| 57.3| 0.0403| 
+| [Backward Smoothing <br>(Chen et al., 2020)](https://arxiv.org/abs/2010.01278)| 85.3| 54.9| 55.1| 0.0403| 
 | [Adversarial Training (retrained) <br>(Madry et al., 2018)](https://arxiv.org/abs/1706.06083)| 87.4| 50.6| 54.0| 0.0377| 
 | [MMA <br>(Ding et al., 2020)](https://openreview.net/forum?id=HkeryxBtPB)| 84.4| 47.2| 47.7| 0.0345|
 | [Adversarial Training (original) <br>(Madry et al., 2018)](https://arxiv.org/abs/1706.06083)| 87.1| 47.0| 50.7| 0.0344| 
