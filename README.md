@@ -28,6 +28,7 @@ We tested the robustness of recently proposed robust models which are trained on
 
 |Method |Natural Acc |Robust Acc <br>(Reported) |Robust Acc <br>(RayS) | ADBD|
 |:---:|---:|---:|---:|---:|
+| [WAR <br>(Wu et al., 2020)](https://arxiv.org/abs/2010.01279)*|  85.6| 59.8| 63.2| 0.0480|
 | [RST <br>(Carmon et al., 2019)](https://arxiv.org/abs/1905.13736)*|  89.7| 62.5| 64.6| 0.0465|
 | [HYDRA <br>(Sehwag et al., 2020)](https://arxiv.org/abs/2002.10509)*| 89.0| 57.2| 62.1| 0.0450|
 | [MART <br>(Wang et al., 2020)](https://openreview.net/forum?id=rklOg6EFwS)*| 87.5| 65.0| 62.2| 0.0439|
