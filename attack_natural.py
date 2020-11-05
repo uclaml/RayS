@@ -70,7 +70,7 @@ def main():
         exit(1)
 
      
-    attack = RayS(torch_model, ord=order, epsilon=args.epsilon, early_stopping=early_stopping)
+    attack = RayS(torch_model, order=order, epsilon=args.epsilon, early_stopping=early_stopping)
      
     stop_dists = []
     stop_queries = []
